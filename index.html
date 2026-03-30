@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sathyadeva Vemula — Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy:       #0a192f;
+    --navy-light: #112240;
+    --navy-mid:   #1d3461;
+    --slate:      #8892b0;
+    --slate-light:#a8b2d8;
+    --white:      #ccd6f6;
+    --white-pure: #e6f1ff;
+    --teal:       #64ffda;
+    --teal-dim:   rgba(100,255,218,0.1);
+    --border:     rgba(100,255,218,0.12);
+    --font-sans:  'Nunito Sans', system-ui, sans-serif;
+    --font-mono:  'Fira Code', monospace;
+    --transition: all 0.25s cubic-bezier(0.645,0.045,0.355,1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--navy-mid) var(--navy); }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--navy-mid); border-radius: 3px; }
+  body { background: var(--navy); color: var(--slate); font-family: var(--font-sans); font-size: 18px; line-height: 1.3; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; transition: var(--transition); }
+
+  /* LAYOUT */
+  .wrapper { display: flex; min-height: 100vh; max-width: 1280px; margin: 0 auto; padding: 0 60px; }
+
+  /* LEFT PANEL */
+  .left-panel { width: 42%; max-width: 520px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 96px 0 80px; flex-shrink: 0; }
+  .left-name { font-size: clamp(38px, 4.5vw, 60px); font-weight: 900; color: var(--white-pure); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 14px; }
+  .left-title { font-size: clamp(16px, 1.8vw, 22px); font-weight: 600; color: var(--white); margin-bottom: 20px; }
+  .left-tagline { font-size: 17px; color: var(--slate); max-width: 340px; line-height: 1.75; font-weight: 300; }
+  .status-badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; padding: 8px 16px; border: 1px solid var(--border); border-radius: 30px; font-family: var(--font-mono); font-size: 11px; color: var(--teal); letter-spacing: 0.1em; background: rgba(100,255,218,0.05); width: fit-content; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  /* NAV */
+  .left-nav { margin-top: 52px; display: flex; flex-direction: column; gap: 4px; }
+  .nav-item { display: flex; align-items: center; gap: 16px; padding: 8px 0; cursor: pointer; transition: var(--transition); text-decoration: none; width: fit-content; }
+  .nav-line { width: 32px; height: 1px; background: var(--slate); transition: var(--transition); flex-shrink: 0; }
+  .nav-label { font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--slate); transition: var(--transition); }
+  .nav-item:hover .nav-line, .nav-item.active .nav-line { width: 64px; background: var(--teal); }
+  .nav-item:hover .nav-label, .nav-item.active .nav-label { color: var(--white-pure); }
+
+  /* SOCIALS */
+  .left-socials { display: flex; gap: 20px; align-items: center; }
+  .social-link { color: var(--slate); transition: var(--transition); display: flex; align-items: center; }
+  .social-link:hover { color: var(--teal); transform: translateY(-3px); }
+  .social-link svg { width: 22px; height: 22px; fill: currentColor; }
+
+  /* RIGHT PANEL */
+  .right-panel { flex: 1; padding: 96px 0 120px 80px; }
+  section { margin-bottom: 120px; scroll-margin-top: 80px; }
+
+  /* SECTION LABEL */
+  .section-label { font-family: var(--font-mono); font-size: 12px; color: var(--teal); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; display: block; width: 200px; height: 1px; background: var(--navy-mid); }
+
+  /* ABOUT */
+  .about-text { font-size: 17px; color: var(--slate-light); line-height: 1.85; font-weight: 300; }
+  .about-text p { margin-bottom: 18px; }
+  .about-text a { color: var(--teal); font-weight: 600; }
+  .about-text a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .about-text strong { color: var(--white-pure); font-weight: 700; }
+
+  /* STATS */
+  .stats-row { display: flex; gap: 16px; margin-top: 36px; flex-wrap: wrap; }
+  .stat-box { background: var(--navy-light); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; text-align: center; min-width: 110px; transition: var(--transition); }
+  .stat-box:hover { border-color: var(--teal); transform: translateY(-3px); }
+  .stat-val { font-size: 28px; font-weight: 900; color: var(--teal); line-height: 1; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .stat-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--slate); letter-spacing: 0.08em; line-height: 1.6; }
+
+  /* EXPERIENCE */
+  .exp-item { display: grid; grid-template-columns: 108px 1fr; gap: 0 24px; padding: 20px 20px 22px 0; border-radius: 10px; transition: var(--transition); cursor: default; margin-bottom: 4px; }
+  .exp-item:hover { background: rgba(100,255,218,0.04); padding-left: 20px; box-shadow: inset 0 0 0 1px var(--border); }
+  .exp-dates { font-family: var(--font-mono); font-size: 11px; color: var(--slate); letter-spacing: 0.06em; text-transform: uppercase; padding-top: 6px; line-height: 1.7; }
+  .exp-title { font-size: 19px; font-weight: 700; color: var(--white-pure); margin-bottom: 4px; line-height: 1.3; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .exp-company-link { color: var(--teal); transition: var(--transition); }
+  .exp-company-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .exp-badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 10px; border-radius: 3px; background: rgba(100,255,218,0.15); color: var(--teal); letter-spacing: 0.06em; }
+  .exp-desc { font-size: 16px; color: var(--slate); line-height: 1.8; margin: 10px 0; font-weight: 300; }
+  .exp-desc strong { color: var(--slate-light); font-weight: 600; }
+  .exp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chip { font-family: var(--font-mono); font-size: 11px; padding: 5px 13px; border-radius: 20px; background: var(--teal-dim); color: var(--teal); letter-spacing: 0.05em; font-weight: 500; }
+  .exp-divider { height: 1px; background: var(--border); margin: 6px 0; opacity: 0.35; }
+  .resume-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 40px; color: var(--white-pure); font-weight: 700; font-size: 16px; transition: var(--transition); padding-bottom: 2px; border-bottom: 1px solid var(--teal); }
+  .resume-link:hover { color: var(--teal); gap: 16px; }
+
+  /* FEATURED PROJECT CARDS */
+  .project-card { display: grid; grid-template-columns: 1fr 1.05fr; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 28px; transition: var(--transition); background: var(--navy-light); text-decoration: none; color: inherit; }
+  .project-card:hover { border-color: rgba(100,255,218,0.3); transform: translateY(-4px); box-shadow: 0 24px 60px rgba(2,12,27,0.7); }
+  .project-card.reverse { grid-template-columns: 1.05fr 1fr; }
+  .project-card.reverse .proj-img { order: -1; }
+  .proj-img { position: relative; overflow: hidden; min-height: 230px; }
+  .proj-img-inner { position: absolute; inset: 0; transition: transform 0.5s ease; }
+  .project-card:hover .proj-img-inner { transform: scale(1.04); }
+  .proj-img-overlay { position: absolute; inset: 0; background: linear-gradient(135deg,rgba(10,25,47,0.25) 0%,rgba(10,25,47,0.05) 100%); z-index: 1; }
+  .proj-body { padding: 32px 36px; display: flex; flex-direction: column; justify-content: space-between; }
+  .proj-featured { font-family: var(--font-mono); font-size: 12px; color: var(--teal); letter-spacing: 0.1em; margin-bottom: 10px; }
+  .proj-title { font-size: 22px; font-weight: 800; color: var(--white-pure); margin-bottom: 12px; line-height: 1.25; }
+  .proj-period { font-family: var(--font-mono); font-size: 11px; color: var(--slate); margin-bottom: 14px; letter-spacing: 0.06em; }
+  .proj-desc { font-size: 15px; color: var(--slate); line-height: 1.75; font-weight: 300; margin-bottom: 16px; }
+  .proj-desc strong { color: var(--slate-light); font-weight: 600; }
+  .proj-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .proj-chip { font-family: var(--font-mono); font-size: 11px; color: var(--slate); letter-spacing: 0.04em; }
+  .proj-chip + .proj-chip::before { content: '·'; margin-right: 8px; color: var(--slate); opacity: 0.4; }
+  .proj-links { display: flex; gap: 14px; }
+  .proj-link { color: var(--slate-light); transition: var(--transition); display: flex; align-items: center; }
+  .proj-link:hover { color: var(--teal); transform: translateY(-2px); }
+  .proj-link svg { width: 20px; height: 20px; }
+
+  /* SMALL CARDS */
+  .small-projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 14px; }
+  .small-card { background: var(--navy-light); border: 1px solid var(--border); border-radius: 10px; padding: 26px; transition: var(--transition); display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: inherit; }
+  .small-card:hover { border-color: rgba(100,255,218,0.3); transform: translateY(-5px); box-shadow: 0 14px 40px rgba(2,12,27,0.7); background: rgba(29,52,97,0.45); }
+  .sc-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .sc-folder { color: var(--teal); }
+  .sc-folder svg { width: 40px; height: 40px; }
+  .sc-links { display: flex; gap: 10px; }
+  .sc-links a { color: var(--slate); transition: var(--transition); }
+  .sc-links a:hover { color: var(--teal); }
+  .sc-links svg { width: 19px; height: 19px; }
+  .sc-title { font-size: 20px; font-weight: 700; color: var(--white-pure); line-height: 1.3; }
+  .sc-desc { font-size: 15px; color: var(--slate); line-height: 1.75; font-weight: 300; flex: 1; }
+  .sc-desc strong { color: var(--slate-light); font-weight: 600; }
+  .sc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sc-chip { font-family: var(--font-mono); font-size: 11px; color: var(--slate); letter-spacing: 0.04em; }
+  .sc-chip + .sc-chip::before { content: '·'; margin-right: 8px; opacity: 0.5; }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .skill-group { background: var(--navy-light); border: 1px solid var(--border); border-radius: 10px; padding: 24px 26px; transition: var(--transition); }
+  .skill-group:hover { border-color: rgba(100,255,218,0.25); transform: translateY(-2px); }
+  .sg-name { font-family: var(--font-mono); font-size: 12px; color: var(--teal); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+  .sg-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sg-list li { font-size: 14px; color: var(--slate-light); display: flex; align-items: center; gap: 8px; font-weight: 300; }
+  .sg-list li::before { content: '▸'; color: var(--teal); font-size: 10px; flex-shrink: 0; }
+
+  /* FOOTER */
+  .footer { padding: 20px 0 60px; font-family: var(--font-mono); font-size: 12px; color: var(--slate); letter-spacing: 0.06em; line-height: 2.2; }
+  .footer a { color: var(--teal); }
+  .footer a:hover { text-decoration: underline; }
+
+  /* SPOTLIGHT */
+  .spotlight { pointer-events: none; position: fixed; inset: 0; z-index: 0; transition: opacity 0.3s; background: radial-gradient(600px at 0px 0px, rgba(29,78,216,0.06), transparent 80%); }
+
+  /* FADE IN */
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+  .d1{transition-delay:0.1s} .d2{transition-delay:0.2s} .d3{transition-delay:0.3s}
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) { .wrapper{padding:0 40px;} .left-panel{width:38%;} .right-panel{padding-left:48px;} }
+  @media (max-width: 768px) {
+    .wrapper{flex-direction:column;padding:0 24px;}
+    .left-panel{position:static;width:100%;height:auto;padding:60px 0 36px;}
+    .left-nav{display:none;}
+    .right-panel{padding:0 0 80px;}
+    .project-card,.project-card.reverse{grid-template-columns:1fr;}
+    .project-card.reverse .proj-img{order:0;}
+    .proj-img{min-height:190px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="spotlight" id="spotlight"></div>
+
+<div class="wrapper">
+
+  <!-- ══ LEFT ══ -->
+  <aside class="left-panel">
+    <div>
+      <h1 class="left-name">Sathyadeva<br>Vemula</h1>
+      <h2 class="left-title">Senior Data Engineer</h2>
+      <p class="left-tagline">I build production-grade data pipelines that enterprises stake decisions on.</p>
+      <div class="status-badge"><span class="status-dot"></span>Open to Work</div>
+      <nav class="left-nav">
+        <a href="#about"      class="nav-item active"><span class="nav-line"></span><span class="nav-label">About</span></a>
+        <a href="#experience" class="nav-item"><span class="nav-line"></span><span class="nav-label">Experience</span></a>
+        <a href="#projects"   class="nav-item"><span class="nav-line"></span><span class="nav-label">Projects</span></a>
+        <a href="#skills"     class="nav-item"><span class="nav-line"></span><span class="nav-label">Skills</span></a>
+      </nav>
+    </div>
+    <div class="left-socials">
+      <a href="https://github.com/sathyadevavemula" target="_blank" rel="noreferrer" class="social-link" aria-label="GitHub">
+        <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/sathyadevavemula/" target="_blank" rel="noreferrer" class="social-link" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="mailto:sathyadeva.vemula@gmail.com" class="social-link" aria-label="Email">
+        <svg viewBox="0 0 24 24"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/></svg>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ══ RIGHT ══ -->
+  <main class="right-panel" id="content">
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="section-label">About</div>
+      <div class="about-text">
+        <p>I'm a data engineer with <strong>5+ years of experience</strong> building production-grade pipelines that enterprises stake decisions on. My specialty is turning messy, siloed, unreliable data into systems that perform — medallion architecture on <a href="https://www.databricks.com" target="_blank" rel="noreferrer">Azure Databricks</a>, governed platforms with Unity Catalog, and Snowflake warehouses at scale.</p>
+        <p>At <strong>Morningstar</strong>, I identified <strong>$200K+ in annual cloud cost savings</strong> through systematic SQL profiling and warehouse right-sizing while processing 40M+ daily records at 99%+ reliability. At <strong>US Foods</strong>, I cut pipeline run times by 35% by resolving data skew that had plagued the platform for years.</p>
+        <p>I care deeply about the full stack of data quality — schema enforcement at ingestion, dbt transformation standards at the logic layer, row-level security at reporting, and lineage visibility across all of it. <strong>Bad data is a business problem, and I treat it that way.</strong></p>
+        <p>Currently in Cincinnati, OH — open to relocation and onsite or hybrid roles where infrastructure quality, platform governance, and business impact are taken seriously.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box fade-in d1"><div class="stat-val">5+</div><div class="stat-lbl">Years<br>Experience</div></div>
+        <div class="stat-box fade-in d2"><div class="stat-val">40M+</div><div class="stat-lbl">Daily Records<br>Processed</div></div>
+        <div class="stat-box fade-in d3"><div class="stat-val">$200K+</div><div class="stat-lbl">Cloud Cost<br>Savings</div></div>
+        <div class="stat-box fade-in d1"><div class="stat-val">99%+</div><div class="stat-lbl">Pipeline<br>Reliability</div></div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="section-label">Experience</div>
+
+      <div class="exp-item fade-in">
+        <div class="exp-dates">Oct 2024 —<br>Present</div>
+        <div>
+          <div class="exp-title">Data Engineer · <a href="https://morningstar.com" target="_blank" rel="noreferrer" class="exp-company-link">Morningstar</a><span class="exp-badge">Current</span></div>
+          <div class="exp-desc">Designed multi-layer Snowflake warehouse processing <strong>40M+ daily records</strong>, cutting compute costs by 20%. Identified <strong>$200K+ in annual cloud optimization</strong> through SQL cost analysis and warehouse right-sizing. Architected Bronze-Silver-Gold medallion pipelines using Delta Live Tables with Unity Catalog governance. Built 10+ Power BI dashboards cutting leadership reporting turnaround by <strong>45%</strong> via DAX optimization and CI/CD deployment pipelines.</div>
+          <div class="exp-chips"><span class="chip">Snowflake</span><span class="chip">Delta Live Tables</span><span class="chip">Unity Catalog</span><span class="chip">Power BI</span><span class="chip">Azure DevOps</span><span class="chip">Python</span><span class="chip">DAX</span></div>
+        </div>
+      </div>
+      <div class="exp-divider"></div>
+      <div class="exp-item fade-in">
+        <div class="exp-dates">Jan 2023 —<br>Oct 2024</div>
+        <div>
+          <div class="exp-title">Data Analytics Engineer · <a href="https://usfoods.com" target="_blank" rel="noreferrer" class="exp-company-link">US Foods</a></div>
+          <div class="exp-desc">Built full retail analytics platform on Azure Databricks — ELT pipelines, DLT data quality enforcement, Gold-layer serving 7 Power BI dashboards. Reduced pipeline run times by <strong>35%</strong> via smart partitioning. Automated quality checks catching <strong>3,000+ erroneous records weekly</strong>, improving downstream accuracy to 97%. Contributed to a <strong>15% reduction in inventory stockouts</strong>.</div>
+          <div class="exp-chips"><span class="chip">Azure Databricks</span><span class="chip">Delta Lake</span><span class="chip">dbt</span><span class="chip">PySpark</span><span class="chip">Azure Data Factory</span><span class="chip">ADLS Gen2</span></div>
+        </div>
+      </div>
+      <div class="exp-divider"></div>
+      <div class="exp-item fade-in">
+        <div class="exp-dates">Aug 2021 —<br>Aug 2022</div>
+        <div>
+          <div class="exp-title">Data Analyst · <a href="https://cognizant.com" target="_blank" rel="noreferrer" class="exp-company-link">Cognizant</a></div>
+          <div class="exp-desc">Reduced a <strong>3-day report cycle to under 4 hours</strong> through reusable ETL transformation logic. Built Bronze-Silver-Gold pipelines with downstream Snowflake loading. Implemented a repeatable QA framework across the analytics team for <strong>40+ test cases</strong>.</div>
+          <div class="exp-chips"><span class="chip">PySpark</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">Snowflake</span><span class="chip">Power BI</span><span class="chip">SSRS</span></div>
+        </div>
+      </div>
+
+      <a href="#" class="resume-link fade-in">View Full Résumé <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"/></svg></a>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="section-label">Projects</div>
+
+      <!-- Card 1 -->
+      <div class="project-card fade-in">
+        <div class="proj-body">
+          <div>
+            <div class="proj-featured">Featured Project</div>
+            <div class="proj-title">Retail Market Analysis Dashboard</div>
+            <div class="proj-period">Dec 2024 – Feb 2025</div>
+            <div class="proj-desc">Integrated <strong>7 enterprise datasets with 1.5M+ transactions</strong> at 99% accuracy. Orchestrated ingestion via Databricks Delta Live Tables with ACID merges, serving the Gold layer to Power BI with geospatial maps, tree maps, and KPI drilldowns — delivering <strong>40% faster query response</strong>.</div>
+            <div class="proj-chips"><span class="proj-chip">Power BI</span><span class="proj-chip">Delta Live Tables</span><span class="proj-chip">Databricks</span><span class="proj-chip">SQL</span><span class="proj-chip">Power Query</span></div>
+          </div>
+          <div class="proj-links">
+            <a href="#" class="proj-link" aria-label="View Dashboard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          </div>
+        </div>
+        <div class="proj-img">
+          <div class="proj-img-inner">
+            <svg width="100%" height="100%" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" style="background:linear-gradient(135deg,#0d2137 0%,#071524 100%)">
+              <defs><linearGradient id="ag1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#64ffda" stop-opacity="0.28"/><stop offset="100%" stop-color="#64ffda" stop-opacity="0"/></linearGradient></defs>
+              <line x1="0" y1="80" x2="520" y2="80" stroke="#1d3461" stroke-width="1"/><line x1="0" y1="150" x2="520" y2="150" stroke="#1d3461" stroke-width="1"/><line x1="0" y1="220" x2="520" y2="220" stroke="#1d3461" stroke-width="1"/>
+              <path d="M20,230 L80,185 L140,160 L200,115 L260,135 L320,90 L370,65 L420,100 L480,55 L520,75" fill="none" stroke="#64ffda" stroke-width="2.5"/>
+              <path d="M20,230 L80,185 L140,160 L200,115 L260,135 L320,90 L370,65 L420,100 L480,55 L520,75 L520,300 L20,300 Z" fill="url(#ag1)"/>
+              <circle cx="200" cy="115" r="4.5" fill="#64ffda"/><circle cx="320" cy="90" r="4.5" fill="#64ffda"/><circle cx="480" cy="55" r="6" fill="#fff" stroke="#64ffda" stroke-width="2"/>
+              <rect x="16" y="16" width="96" height="40" rx="6" fill="#112240" stroke="#1d3461"/><text x="64" y="30" text-anchor="middle" font-family="monospace" font-size="9" fill="#64ffda">REVENUE</text><text x="64" y="47" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="#e6f1ff">$24.9M</text>
+              <rect x="124" y="16" width="96" height="40" rx="6" fill="#112240" stroke="#1d3461"/><text x="172" y="30" text-anchor="middle" font-family="monospace" font-size="9" fill="#64ffda">RECORDS</text><text x="172" y="47" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="#e6f1ff">1.5M+</text>
+              <rect x="232" y="16" width="96" height="40" rx="6" fill="#112240" stroke="#1d3461"/><text x="280" y="30" text-anchor="middle" font-family="monospace" font-size="9" fill="#64ffda">ACCURACY</text><text x="280" y="47" text-anchor="middle" font-family="monospace" font-size="14" font-weight="bold" fill="#e6f1ff">99%</text>
+              <rect x="380" y="160" width="18" height="90" rx="3" fill="#1d3461"/><rect x="406" y="130" width="18" height="120" rx="3" fill="#1d3461"/><rect x="432" y="105" width="18" height="145" rx="3" fill="#64ffda" opacity="0.65"/><rect x="458" y="135" width="18" height="115" rx="3" fill="#1d3461"/><rect x="484" y="118" width="18" height="132" rx="3" fill="#1d3461"/>
+            </svg>
+          </div>
+          <div class="proj-img-overlay"></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="project-card reverse fade-in">
+        <div class="proj-body">
+          <div>
+            <div class="proj-featured">Featured Project</div>
+            <div class="proj-title">Academic Enrollment Forecasting — Bismarck State College</div>
+            <div class="proj-period">Dec 2025</div>
+            <div class="proj-desc">Analyzed 5 years of institutional data. Built Bronze-Silver-Gold DLT pipeline with schema enforcement. Star-schema semantic model with <strong>CAGR forecasting projecting 120,000 credit hours by 2029</strong>. Delivered directly to college leadership as pre-interview analytics task.</div>
+            <div class="proj-chips"><span class="proj-chip">Power BI</span><span class="proj-chip">DAX</span><span class="proj-chip">Delta Live Tables</span><span class="proj-chip">CAGR Forecasting</span></div>
+          </div>
+          <div class="proj-links">
+            <a href="#" class="proj-link" aria-label="View Dashboard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          </div>
+        </div>
+        <div class="proj-img">
+          <div class="proj-img-inner">
+            <svg width="100%" height="100%" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" style="background:linear-gradient(135deg,#130d2e 0%,#0a192f 100%)">
+              <defs><linearGradient id="ag2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.32"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></linearGradient></defs>
+              <line x1="0" y1="70" x2="520" y2="70" stroke="#1d3461" stroke-width="1"/><line x1="0" y1="140" x2="520" y2="140" stroke="#1d3461" stroke-width="1"/><line x1="0" y1="210" x2="520" y2="210" stroke="#1d3461" stroke-width="1"/>
+              <path d="M40,230 C90,215 140,195 200,165 C250,145 300,125 360,105" fill="none" stroke="#a78bfa" stroke-width="2.5"/>
+              <path d="M360,105 C400,85 440,72 500,55" fill="none" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6,4"/>
+              <path d="M40,230 C90,215 140,195 200,165 C250,145 300,125 360,105 C400,85 440,72 500,55 L500,300 L40,300 Z" fill="url(#ag2)"/>
+              <line x1="0" y1="55" x2="520" y2="55" stroke="#64ffda" stroke-width="1" stroke-dasharray="5,7" opacity="0.45"/>
+              <text x="500" y="48" text-anchor="end" font-family="monospace" font-size="10" fill="#64ffda">120K credit target</text>
+              <circle cx="40" cy="230" r="4.5" fill="#a78bfa"/><circle cx="200" cy="165" r="4.5" fill="#a78bfa"/><circle cx="360" cy="105" r="6" fill="#fff" stroke="#a78bfa" stroke-width="2"/><circle cx="500" cy="55" r="4" fill="#a78bfa" opacity="0.6"/>
+              <text x="40" y="250" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">2020</text><text x="200" y="250" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">2022</text><text x="360" y="250" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">2024</text><text x="500" y="250" text-anchor="middle" font-family="monospace" font-size="9" fill="#a78bfa">2029 ↗</text>
+              <rect x="16" y="14" width="130" height="34" rx="5" fill="#1d2a4a" stroke="#2d3a5a"/><text x="81" y="25" text-anchor="middle" font-family="monospace" font-size="8" fill="#a78bfa">PROJECTED</text><text x="81" y="40" text-anchor="middle" font-family="monospace" font-size="13" font-weight="bold" fill="#e6f1ff">120K Credits</text>
+              <rect x="158" y="14" width="110" height="34" rx="5" fill="#1d2a4a" stroke="#2d3a5a"/><text x="213" y="25" text-anchor="middle" font-family="monospace" font-size="8" fill="#a78bfa">CAGR</text><text x="213" y="40" text-anchor="middle" font-family="monospace" font-size="13" font-weight="bold" fill="#e6f1ff">+8.4% / yr</text>
+            </svg>
+          </div>
+          <div class="proj-img-overlay"></div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="project-card fade-in">
+        <div class="proj-body">
+          <div>
+            <div class="proj-featured">Featured Project</div>
+            <div class="proj-title">Adventure Works — Executive BI Dashboard</div>
+            <div class="proj-period">Aug – Nov 2024</div>
+            <div class="proj-desc">End-to-end Power BI solution with star schema, <strong>20+ custom DAX measures</strong>, drill-through pages, toggle menus, and RLS. Tracked <strong>$24.9M revenue · $10.5M profit · 25K+ orders</strong> with +3.31% MoM revenue growth identified.</div>
+            <div class="proj-chips"><span class="proj-chip">Power BI</span><span class="proj-chip">DAX</span><span class="proj-chip">Power Query</span><span class="proj-chip">RLS</span><span class="proj-chip">Star Schema</span></div>
+          </div>
+          <div class="proj-links">
+            <a href="#" class="proj-link" aria-label="View Dashboard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+          </div>
+        </div>
+        <div class="proj-img">
+          <div class="proj-img-inner">
+            <svg width="100%" height="100%" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" style="background:linear-gradient(135deg,#0d1f0f 0%,#0a192f 100%)">
+              <defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs>
+              <line x1="70" y1="40" x2="70" y2="260" stroke="#1d3461" stroke-width="1"/><line x1="70" y1="260" x2="500" y2="260" stroke="#1d3461" stroke-width="1"/>
+              <line x1="70" y1="190" x2="500" y2="190" stroke="#1d3461" stroke-width="1" opacity="0.4"/><line x1="70" y1="130" x2="500" y2="130" stroke="#1d3461" stroke-width="1" opacity="0.4"/><line x1="70" y1="70" x2="500" y2="70" stroke="#1d3461" stroke-width="1" opacity="0.4"/>
+              <rect x="90" y="140" width="44" height="120" rx="4" fill="url(#bg1)" opacity="0.75"/>
+              <rect x="155" y="108" width="44" height="152" rx="4" fill="url(#bg1)" opacity="0.85"/>
+              <rect x="220" y="76" width="44" height="184" rx="4" fill="url(#bg1)"/>
+              <rect x="285" y="116" width="44" height="144" rx="4" fill="url(#bg1)" opacity="0.7"/>
+              <rect x="350" y="90" width="44" height="170" rx="4" fill="url(#bg1)" opacity="0.9"/>
+              <rect x="415" y="64" width="44" height="196" rx="4" fill="none" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <text x="112" y="275" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">Q1</text><text x="177" y="275" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">Q2</text><text x="242" y="275" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">Q3</text><text x="307" y="275" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">Q4</text><text x="372" y="275" text-anchor="middle" font-family="monospace" font-size="9" fill="#8892b0">Q5</text><text x="437" y="275" text-anchor="middle" font-family="monospace" font-size="9" fill="#34d399">Q6 ↑</text>
+              <rect x="16" y="12" width="100" height="36" rx="5" fill="#0d1f14" stroke="#1a3020"/><text x="66" y="24" text-anchor="middle" font-family="monospace" font-size="8" fill="#34d399">REVENUE</text><text x="66" y="40" text-anchor="middle" font-family="monospace" font-size="13" font-weight="bold" fill="#e6f1ff">$24.9M</text>
+              <rect x="128" y="12" width="100" height="36" rx="5" fill="#0d1f14" stroke="#1a3020"/><text x="178" y="24" text-anchor="middle" font-family="monospace" font-size="8" fill="#34d399">PROFIT</text><text x="178" y="40" text-anchor="middle" font-family="monospace" font-size="13" font-weight="bold" fill="#e6f1ff">$10.5M</text>
+              <rect x="240" y="12" width="100" height="36" rx="5" fill="#0d1f14" stroke="#1a3020"/><text x="290" y="24" text-anchor="middle" font-family="monospace" font-size="8" fill="#34d399">ORDERS</text><text x="290" y="40" text-anchor="middle" font-family="monospace" font-size="13" font-weight="bold" fill="#e6f1ff">25K+</text>
+              <rect x="360" y="12" width="110" height="36" rx="5" fill="#0d2e1a" stroke="#34d399"/><text x="415" y="24" text-anchor="middle" font-family="monospace" font-size="8" fill="#34d399">MoM GROWTH</text><text x="415" y="40" text-anchor="middle" font-family="monospace" font-size="13" font-weight="bold" fill="#34d399">+3.31%</text>
+            </svg>
+          </div>
+          <div class="proj-img-overlay"></div>
+        </div>
+      </div>
+
+      <!-- Small cards -->
+      <p style="font-family:var(--font-mono);font-size:12px;color:var(--slate);letter-spacing:0.12em;text-transform:uppercase;margin:44px 0 18px;">Other Noteworthy Projects</p>
+      <div class="small-projects">
+        <div class="small-card fade-in">
+          <div class="sc-top">
+            <div class="sc-folder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
+            <div class="sc-links"><a href="https://flow-sync-hr.base44.app" target="_blank" rel="noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+          </div>
+          <div class="sc-title">FlowSync HR</div>
+          <div class="sc-desc">AI-powered HR analytics platform — real-time pulse tracking, burnout radar, auto-generated journals. <strong>Finalist in Base44 $10K Challenge.</strong></div>
+          <div class="sc-chips"><span class="sc-chip">Base44</span><span class="sc-chip">AI/ML</span><span class="sc-chip">HR Analytics</span></div>
+        </div>
+        <div class="small-card fade-in">
+          <div class="sc-top"><div class="sc-folder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div></div>
+          <div class="sc-title">Maven Market BI Dashboard</div>
+          <div class="sc-desc">Multinational grocery BI across Canada, Mexico, USA. 20+ DAX measures — <strong>59.9% profit margin</strong> and 5.69% MoM transaction growth over target uncovered.</div>
+          <div class="sc-chips"><span class="sc-chip">Power BI</span><span class="sc-chip">DAX</span><span class="sc-chip">Snowflake Schema</span></div>
+        </div>
+        <div class="small-card fade-in">
+          <div class="sc-top"><div class="sc-folder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div></div>
+          <div class="sc-title">Distributed Deep Learning on Azure</div>
+          <div class="sc-desc">Led team of 4 — CNN, LSTM & Bi-RNN on Azure GPU clusters. <strong>20% system performance improvement</strong> via parallel computing and dynamic resource allocation.</div>
+          <div class="sc-chips"><span class="sc-chip">Azure ML</span><span class="sc-chip">CNN / LSTM</span><span class="sc-chip">Python</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="section-label">Skills</div>
+      <div class="skills-grid">
+        <div class="skill-group fade-in"><div class="sg-name">Core Engineering</div><ul class="sg-list"><li>Python</li><li>PySpark</li><li>Spark SQL</li><li>T-SQL</li><li>Snowflake SQL</li><li>Scala</li></ul></div>
+        <div class="skill-group fade-in"><div class="sg-name">Databricks & Delta</div><ul class="sg-list"><li>Azure Databricks</li><li>Delta Lake</li><li>Delta Live Tables</li><li>Unity Catalog</li><li>Databricks SQL</li><li>Medallion Arch.</li></ul></div>
+        <div class="skill-group fade-in"><div class="sg-name">Cloud & Orchestration</div><ul class="sg-list"><li>Azure Data Factory</li><li>ADLS Gen2</li><li>Event Hubs</li><li>Synapse Analytics</li><li>Azure Functions</li><li>Service Bus</li></ul></div>
+        <div class="skill-group fade-in"><div class="sg-name">DevOps & Infra</div><ul class="sg-list"><li>Terraform</li><li>GitHub Actions</li><li>Azure DevOps</li><li>CI/CD Pipelines</li><li>Git</li><li>Agile / JIRA</li></ul></div>
+        <div class="skill-group fade-in"><div class="sg-name">BI & Reporting</div><ul class="sg-list"><li>Power BI</li><li>DAX</li><li>Power Query</li><li>dbt</li><li>SSRS</li><li>Semantic Models</li></ul></div>
+        <div class="skill-group fade-in"><div class="sg-name">Governance</div><ul class="sg-list"><li>Unity Catalog</li><li>Microsoft Purview</li><li>Data Lineage</li><li>RLS Policies</li><li>Access Control</li><li>Star Schema</li></ul></div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>Designed &amp; built by <strong style="color:var(--white)">Sathyadeva Vemula</strong></p>
+      <p>Inspired by <a href="https://brittanychiang.com" target="_blank" rel="noreferrer">Brittany Chiang</a> &nbsp;·&nbsp; Cincinnati, OH &nbsp;·&nbsp; <a href="mailto:sathyadeva.vemula@gmail.com">sathyadeva.vemula@gmail.com</a></p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* SPOTLIGHT */
+document.addEventListener('mousemove', e => {
+  document.getElementById('spotlight').style.background =
+    `radial-gradient(600px at ${e.clientX}px ${e.clientY}px, rgba(29,78,216,0.08), transparent 80%)`;
+});
+
+/* ACTIVE NAV */
+const navItems = document.querySelectorAll('.nav-item');
+const sections = document.querySelectorAll('section[id]');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const a = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { rootMargin: '-30% 0px -65% 0px' });
+sections.forEach(s => io.observe(s));
+
+/* FADE IN */
+const faders = document.querySelectorAll('.fade-in');
+const fo = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); fo.unobserve(entry.target); }
+  });
+}, { threshold: 0.08 });
+faders.forEach(el => fo.observe(el));
+</script>
+</body>
+</html>
